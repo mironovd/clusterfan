@@ -10,5 +10,5 @@ At this point this is prrof of concept.
 Calculates number of cones in fan of cluster algebra for n=5 (the answer is 672).
 
 TODO:
-- Create presentation for association graph&
+- Create presentation for association graph.
 - Calculation for n=6,finding limit of imaginary elements.
