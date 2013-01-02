@@ -1,5 +1,6 @@
 #require 'rubygems'
 #require 'awesome_print'
+require 'set'
 
 def dc4(value)
   if value.is_a?(Hash)
@@ -53,7 +54,19 @@ class Tableau
     def <=> other
 	return self.tab.flatten <=> other.tab.flatten
     end
+
+    def eql? other
+	return self == other
+    end
+
+    def positive?
+	return (not (self.tab.flatten.find{|i| i<0}))
+    end
     
+    def hash
+	return self.tab.hash
+    end
+
 end
 
 class Graph 
@@ -61,6 +74,8 @@ class Graph
     attr_accessor :vertices
     attr_accessor :deg
     attr_accessor :tabs
+
+    attr_accessor :hash
 
     def initialize n
 	@edges=Hash.new
@@ -78,6 +93,7 @@ class Graph
 #		    puts @tabs[[i,j]]
 	}}
 	@deg=n
+	rehash
     end
 
     def mutable
@@ -116,13 +132,21 @@ class Graph
 	x.edges=z.reject{|k,v| v==0}
 	x.tabs=dc4(@tabs)
 	x.tabs[vertex]=b
+	x.rehash
 	return x
+    end
+
+    def rehash
+	@hash=self.mutable.inject([]){|a,v| a.push(self.tabs[v])}.sort.inject([]){|a,t| a.push(t.hash)}.hash
     end
 
     def == (other)
 #	return (self.deg==other.deg and self.vertices==other.vertices and self.edges==other.edges)		
-	(self.deg==other.deg) and self.tabs.values.sort==other.tabs.values.sort
+	(self.deg==other.deg) and self.hash==other.hash and self.mutable.inject([]){|a,v| a.push(self.tabs[v])}.sort==other.mutable.inject([]){|a,v| a.push(other.tabs[v])}.sort
+#	(self.deg==other.deg) and self.tabs.values.sort == other.tabs.values.sort
     end
+
+	
 
 end
 
@@ -134,6 +158,10 @@ St=Array.new
 As=Array.new
 St[0]=[Gs]
 As[0]=[""]
+
+Tabs=Set.new
+
+Gs.mutable.each{|v| Tabs.add(Gs.tabs[v])}
 
 def Step(n)
     i=1
@@ -158,6 +186,10 @@ def Step(n)
 	    }}
 	    if nw then
 		St[n+1].push(g)
+		Tabs.add(g.tabs[v])
+		if not g.tabs[v].positive? then
+		   puts "FOUND NEGATIVE:\n"+(g.Inspect)
+		end 		
 	    end	
 	}
 	i+=1
@@ -169,8 +201,10 @@ xx=true
 
 t=0
 while xx do
-    puts(t)
-    puts St[t].size
+    puts "===\nStep: "+t.to_s
+    puts "Number of seeds at step: "+St[t].size.to_s
+    puts "Tabloids: "+Tabs.size.to_s
+#    Tabs.sort.each{|x|puts x.inspect}
     Step(t)    
     if St[t+1]==[] then xx=false end
     t+=1
@@ -181,3 +215,4 @@ end
 #puts As.inspect
 
 puts St.flatten.length
+puts Tabs.length
