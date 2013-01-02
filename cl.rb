@@ -150,7 +150,7 @@ class Graph
 
 end
 
-Gs=Graph.new(5)
+Gs=Graph.new(ARGV[0].to_i)
 
 #puts Gs.mutable.inspect
 
