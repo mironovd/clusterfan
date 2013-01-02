@@ -189,6 +189,7 @@ def Step(n)
 		Tabs.add(g.tabs[v])
 		if not g.tabs[v].positive? then
 		   puts "FOUND NEGATIVE:\n"+(g.Inspect)
+		    $stdout.flush 
 		end 		
 	    end	
 	}
@@ -203,7 +204,9 @@ t=0
 while xx do
     puts "===\nStep: "+t.to_s
     puts "Number of seeds at step: "+St[t].size.to_s
+    puts "Total number of seeds at step: "+St.flatten.size.to_s
     puts "Tabloids: "+Tabs.size.to_s
+    $stdout.flush 
 #    Tabs.sort.each{|x|puts x.inspect}
     Step(t)    
     if St[t+1]==[] then xx=false end
