@@ -71,6 +71,13 @@ def Step(n)
 		    File.write($prefix+".neggr/"+"graph"+gx[:g].deg.to_s+"."+gx[:g].hash.to_s+".marshal", Marshal.dump(gx))
 		    $stdout.flush 
 		end 		
+
+		if (not r[:g].edges.find{|e| e[1]>1}) and g.edges.find{|e| e[1]>1} then
+		    puts "FOUND NEW MULTIPLE:\n"
+		    puts gx[path].inspect+"\n"
+		    puts g.edges.find_all{|e| e[1]>1}.map{|u| u[0]}.inspect
+		    $stdout.flush 		    
+		end
 	    end	
 	}
 	i+=1
