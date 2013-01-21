@@ -75,7 +75,7 @@ def Step(n)
 		if (not r[:g].edges.find{|e| e[1]>1}) and g.edges.find{|e| e[1]>1} then
 		    puts "FOUND NEW MULTIPLE:\n"
 		    puts gx[:path].inspect+"\n"
-		    puts g.edges.find_all{|e| e[1]>1}.map{|u| u[0]}.inspect
+		    puts g.edges.find_all{|e| e[1]>1}.inspect
 		    $stdout.flush 		    
 		end
 	    end	
