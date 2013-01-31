@@ -72,8 +72,13 @@ def Step(n)
 		    $stdout.flush 
 		end 		
 
-		if (not r[:g].edges.find{|e| e[1]>1}) and g.edges.find{|e| e[1]>1} then
-		    puts "FOUND NEW MULTIPLE:\n"
+		if (not r[:g].edges.find{|e| e[1]>2}) and g.edges.find{|e| e[1]>2} then
+		    puts "FOUND NEW MULTIPLE GREATER OR EQ 3!!!!:\n"
+		    puts gx[:path].inspect+"\n"
+		    puts g.edges.find_all{|e| e[1]>1}.inspect
+		    $stdout.flush 		    
+		elsif (not r[:g].edges.find{|e| e[1]>1}) and g.edges.find{|e| e[1]>1} then
+		    puts "FOUND NEW SIMPLE MULTIPLE:\n"
 		    puts gx[:path].inspect+"\n"
 		    puts g.edges.find_all{|e| e[1]>1}.inspect
 		    $stdout.flush 		    
