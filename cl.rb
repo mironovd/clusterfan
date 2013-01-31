@@ -77,6 +77,11 @@ def Step(n)
 		    puts gx[:path].inspect+"\n"
 		    puts g.edges.find_all{|e| e[1]>1}.inspect
 		    $stdout.flush 		    
+		elsif (not not r[:g].edges.find{|e| e[1]>1}.size>1) and g.edges.find{|e| e[1]>1}.size>1 then
+		    puts "FOUND NEW DOUBLE MULTIPLE!!!!:\n"
+		    puts gx[:path].inspect+"\n"
+		    puts g.edges.find_all{|e| e[1]>1}.inspect
+		    $stdout.flush 		    
 		elsif (not r[:g].edges.find{|e| e[1]>1}) and g.edges.find{|e| e[1]>1} then
 		    puts "FOUND NEW SIMPLE MULTIPLE:\n"
 		    puts gx[:path].inspect+"\n"
