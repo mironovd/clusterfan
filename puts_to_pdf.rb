@@ -1,4 +1,5 @@
 #~ require 'pry' # uncomment this and IT'LL EXPLODE! >:(
+require 'rubygems'
 require 'graphviz'
 require 'nokogiri'
 require 'prawn'
@@ -27,33 +28,43 @@ module PDFWriter
       g = GraphViz.new(:G, use: :neato, type: :digraph)
       g[:splines] = :true
       g[:sep] = 4
+      g[:overlap] = false
       g.node[shape: :point, width: 0.1]
-      g.edge[arrowhead: :normal]
+      g.edge[arrowhead: :onormal]
       nodes.each do |node|
         pos = pos(node)
         #~ params = {pos: jittered_pos(node)}
         params = {pos: pos}
         if marked_node_coordinates.include?(node) then
+	  p node.inspect
+
           params[:shape] = :doublecircle
           params[:fixedsize] = true
           params[:label] = ''
+#	  params[:width]=0.2
+#	  params[:color]="FF0000"
         end
         g.add_nodes(pos, params)
       end
       a_hash_of_edges.each do |(v1, v2), number_of_edges|
         next if number_of_edges < 0
         number_of_edges.times do
+	    p pos(v1).inspect+pos(v2).inspect
           g.add_edges(
             pos(v1), pos(v2),
-            len: Math.sqrt(
-              (v1[0]-v2[0])**2+(v1[1]-v2[1])**2
-            )*15
+#	    {
+#            :len => Math.sqrt(
+#              (v1[0]-v2[0])**2+(v1[1]-v2[1])**2
+#            )*15,
+#	    :arrowhead => 'onormal'
+#	    }
           )
         end
       end
       width ||= PDFWriter.max_width
       parameters = {width: width}
       svg_string = g.output(svg: String)
+p g.edges.inspect
       w, h = get_svg_size(svg_string)
       resulting_height = width*h/w
       available_height = PDFWriter.pdf.cursor
@@ -75,6 +86,11 @@ module PDFWriter
     end
   end
   
+
+  def self.font_size(size=12)
+    @pdf.font_size(size)
+  end
+
   def self.finish(output_filename=nil)
     @pdf.render_file(output_filename || @output_filename)
   end
@@ -96,17 +112,17 @@ module PDFWriter
   end
 end
 
-if $0 == __FILE__ then # usage example
-  PDFWriter.start('puts_to_pdf.test.pdf')
+#if $0 == __FILE__ then # usage example
+#  PDFWriter.start('puts_to_pdf.test.pdf')
+#  
+#  PDFWriter.putz("hello world") # no, I _couldn't_ name it `puts`
+#  15.times do |i| PDFWriter.putz(i) end
+#  PDFWriter.putz("Lorem ipsum\ndolor sit amet")
   
-  PDFWriter.putz("hello world") # no, I _couldn't_ name it `puts`
-  15.times do |i| PDFWriter.putz(i) end
-  PDFWriter.putz("Lorem ipsum\ndolor sit amet")
+#  graph_example = Marshal.load(IO.read('g.marshal'))
+#  PDFWriter::Digraph.putz(graph_example, PDFWriter.max_width/2, [2, 2])
   
-  graph_example = Marshal.load(IO.read('g.marshal'))
-  PDFWriter::Digraph.putz(graph_example, PDFWriter.max_width/2, [2, 2])
+#  20.times do |i| PDFWriter.putz(i) end
   
-  20.times do |i| PDFWriter.putz(i) end
-  
-  PDFWriter.finish
-end
+#  PDFWriter.finish
+#end
