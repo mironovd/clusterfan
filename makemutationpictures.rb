@@ -6,23 +6,6 @@ require 'ap'
 require_relative 'seeds'
 
 
-gs=Graph.new(ARGV[0].to_i)
-
-$prefix="cl."+ARGV[0]+".res"#ARGV[1]
-
-way=[[1, 0], [2, 1], [1, 1], [2, 0], [3, 1], [3, 2]]
-
-gs=way.reduce(gs){|g,x| g.mutate(x)}
-
-edges=gs.edges.find_all{|e| e[1]>1}
-p edges.inspect
-if edges.size>1 then
-    die "More than one multiple edge"
-end
-
-edge=edges[0][0]
-puts edge.inspect
-M=[gs]
 
 def pdfp(graph, tedge, tway)
     PDFWriter.putz("Way: "+tway.inspect)
@@ -47,8 +30,37 @@ def pdfp(graph, tedge, tway)
 
 end
 
+def pway(g,e,way)
+    ww=[]
+    pdfp(g,e,ww)
+    way.each{|v|
+	ww.push(v)
+	g=g.mutate(v)
+	pdfp(g,e,ww)
+    }
+end
+
 PDFWriter.start('puts_to_pdf.test.pdf')
-pdfp(gs,edge,way)
+
+gs=Graph.new(ARGV[0].to_i)
+
+$prefix="cl."+ARGV[0]+".res"#ARGV[1]
+
+way=[[1, 0], [2, 1], [1, 1], [2, 0], [3, 1], [3, 2]]
+
+gs=way.reduce(gs){|g,x| g.mutate(x)}
+
+edges=gs.edges.find_all{|e| e[1]>1}
+p edges.inspect
+if edges.size>1 then
+    die "More than one multiple edge"
+end
+
+edge=edges[0][0]
+puts edge.inspect
+M=[gs]
+
+pway(Graph.new(ARGV[0].to_i),edge,way)
 
 (0..10).each{|i|
     edge.each{|v|
