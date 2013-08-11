@@ -48,23 +48,25 @@ module PDFWriter
       end
       a_hash_of_edges.each do |(v1, v2), number_of_edges|
         next if number_of_edges < 0
-        number_of_edges.times do
-	    p pos(v1).inspect+pos(v2).inspect
+#        number_of_edges.times do
+#	    p pos(v1).inspect+pos(v2).inspect
           g.add_edges(
             pos(v1), pos(v2),
-#	    {
-#            :len => Math.sqrt(
-#              (v1[0]-v2[0])**2+(v1[1]-v2[1])**2
-#            )*15,
+	    {
+            :len => Math.sqrt(
+              (v1[0]-v2[0])**2+(v1[1]-v2[1])**2
+            )*15,
 #	    :arrowhead => 'onormal'
-#	    }
+	    :label => (number_of_edges>1 ? number_of_edges : '')
+
+	    }
           )
-        end
+#        end
       end
       width ||= PDFWriter.max_width
       parameters = {width: width}
       svg_string = g.output(svg: String)
-p g.edges.inspect
+#p g.edges.inspect
       w, h = get_svg_size(svg_string)
       resulting_height = width*h/w
       available_height = PDFWriter.pdf.cursor
