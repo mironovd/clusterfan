@@ -37,7 +37,7 @@ def pdfp(graph, tedge, tway)
     PDFWriter.font_size(8)
     PDFWriter.putz("Graph matrix:")
     PDFWriter.pdf.column_box([0, PDFWriter.pdf.cursor], :columns => 3, :width=>PDFWriter.pdf.bounds.width) do
-	PDFWriter.pdf.text(graph.edges.select{|v,k| k>0}.ai(:plain=>true))
+	PDFWriter.pdf.text(graph.edges.select{|v,k| k>0}.inspect)#(:plain=>true))
     end    
     p graph.edges.select{|v,k| k>0}.inspect
     p tedge.inspect

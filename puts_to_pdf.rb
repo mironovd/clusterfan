@@ -5,6 +5,7 @@ require 'nokogiri'
 require 'prawn'
 require 'prawn-svg'
 
+
 module PDFWriter
   module Digraph
     def self.pos(node_pair)
@@ -36,7 +37,7 @@ module PDFWriter
         #~ params = {pos: jittered_pos(node)}
         params = {pos: pos}
         if marked_node_coordinates.include?(node) then
-	  p node.inspect
+#	  p node.inspect
 
           params[:shape] = :doublecircle
           params[:fixedsize] = true
@@ -49,7 +50,7 @@ module PDFWriter
       a_hash_of_edges.each do |(v1, v2), number_of_edges|
         next if number_of_edges < 0
         number_of_edges.times do
-	    p pos(v1).inspect+pos(v2).inspect
+#	    p pos(v1).inspect+pos(v2).inspect
           g.add_edges(
             pos(v1), pos(v2),
 #	    {
@@ -64,7 +65,7 @@ module PDFWriter
       width ||= PDFWriter.max_width
       parameters = {width: width}
       svg_string = g.output(svg: String)
-p g.edges.inspect
+#p g.edges.inspect
       w, h = get_svg_size(svg_string)
       resulting_height = width*h/w
       available_height = PDFWriter.pdf.cursor
