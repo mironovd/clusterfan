@@ -1,8 +1,11 @@
 #require 'rubygems'
 #require 'awesome_print'
 require 'set'
+require 'ap'
 
 require_relative 'seeds'
+
+require_relative 'puts_to_pdf'
 
 Gs=Graph.new(ARGV[0].to_i)
 
@@ -13,6 +16,10 @@ Dir.mkdir($prefix+".neggr")
 
 #puts Gs.mutable.inspect
 
+system("rm "+$prefix+".pdf")
+PDFWriter.start($prefix+'.pdf')
+
+
 St=Array.new
 Sh=Hash.new
 #As=Hash.new
@@ -22,6 +29,40 @@ Sh[Gs.hash]=[Gs]
 Tabs=Set.new
 
 Gs.mutable.each{|v| Tabs.add(Gs.tabs[v])}
+
+def pdfp(graph, tv, tway)
+    PDFWriter.putz("Way: "+tway.inspect)
+    PDFWriter::Digraph.putz(graph.edges, PDFWriter.max_width)
+#    tables=tedge.map{|v| graph.tabs[v]}
+    PDFWriter.font_size(10)
+#    PDFWriter.pdf.column_box([0, PDFWriter.pdf.cursor], :columns => 3, :width=>PDFWriter.pdf.bounds.width) do
+#        tedge.each{|v|
+#               PDFWriter.pdf.text("Vertex: "+v.inspect)
+#               PDFWriter.pdf.text(graph.tabs[v].to_str)
+#       }
+
+    t=PDFWriter.pdf.make_table(
+        [["Vertex :"+tv.inspect+"\n"+graph.tabs[tv].to_str,]])
+
+    t.draw
+
+
+    PDFWriter.page_break
+    PDFWriter.font_size(8)
+    PDFWriter.putz("Graph matrix:")
+    PDFWriter.pdf.column_box([0, PDFWriter.pdf.cursor], :columns => 3, :width=>PDFWriter.pdf.bounds.width) do
+        PDFWriter.pdf.text(graph.edges.select{|v,k| k>0}.ai(:plain=>true))
+    end
+    p graph.edges.select{|v,k| k>0}.inspect
+#    p tedge.inspect
+#    PDFWriter.putz(graph.edges.ai(:plain=>true))
+    PDFWriter.font_size
+    PDFWriter.page_break
+    
+end
+
+
+
 
 def Step(n)
     i=1
@@ -63,6 +104,8 @@ def Step(n)
 		    Sh[g.hash]=[g]
 		end
 		
+		pdfp(g,v,gx[:path])
+
 		if Tabs.add?(gx[:g].tabs[v])
 		    File.open($prefix+".tabs","wb"){|f| Tabs.to_a.sort.each{|t| f.write(t.to_str+"\n")}}
 		end
@@ -117,3 +160,5 @@ end
 
 puts St.flatten.length
 puts Tabs.length
+
+PDFWriter.finish
