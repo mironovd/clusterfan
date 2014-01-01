@@ -30,7 +30,7 @@ module PDFWriter
       g[:splines] = :true
       g[:sep] = 4
       g[:overlap] = false
-      g.node[shape: :point, width: 0.1]
+      g.node[shape: :point,]# width: 0.1]
       g.edge[arrowhead: :onormal]
       nodes.each do |node|
         pos = pos(node)
@@ -39,11 +39,11 @@ module PDFWriter
         if marked_node_coordinates.include?(node) then
 #	  p node.inspect
 
-          params[:shape] = :doublecircle
+          params[:shape] = :point
           params[:fixedsize] = true
           params[:label] = ''
-#	  params[:width]=0.2
-#	  params[:color]="FF0000"
+	  params[:width]=0.2
+	  params[:color]="FF0000"
         end
         g.add_nodes(pos, params)
       end

@@ -2,6 +2,7 @@ require_relative 'puts_to_pdf'
 
 require 'set'
 require 'ap'
+require 'pp'
 
 require_relative 'seeds'
 
@@ -20,7 +21,7 @@ def pdfp(graph, tedge, tway)
     PDFWriter.font_size(8)
     PDFWriter.putz("Graph matrix:")
     PDFWriter.pdf.column_box([0, PDFWriter.pdf.cursor], :columns => 3, :width=>PDFWriter.pdf.bounds.width) do
-	PDFWriter.pdf.text(graph.edges.select{|v,k| k>0}.inspect)#(:plain=>true))
+	PDFWriter.pdf.text(graph.edges.select{|v,k| k>0}.pretty_inspect)#ai(:plain=>true))
     end    
     p graph.edges.select{|v,k| k>0}.inspect
     p tedge.inspect
@@ -56,7 +57,7 @@ if edges.size>1 then
     die "More than one multiple edge"
 end
 
-edge=edges[0][0]
+edge=edges[0][0].reverse
 puts edge.inspect
 M=[gs]
 
