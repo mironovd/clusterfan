@@ -12,9 +12,6 @@ Calculates number of distinct tabloids (generating elements) of cluster algebra(
 
 Optimized n^2 algorithm with hash comparison and lazy rehash.
 
-Created script for pretty presentations of graphs uging GraphViz. 
-Still in development, now only example, with hardcoded path of mutations
+Created script for pretty presentations of graphs uging GraphViz. Created presentation for association graphs.
 
-TODO:
-- Create presentation for association graph.
-- Calculation for n=6,finding limit of imaginary elements.
+Calculation for n=6,7: finding limit of imaginary elements. Examples in pdf in pict6.zip and pict7.zip files.
